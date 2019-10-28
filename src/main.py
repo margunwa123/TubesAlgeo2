@@ -17,6 +17,7 @@ import cv2
 import numpy as np
 import scipy
 import matplotlib.pyplot as plt
+from scipy import spatial
 
 # 1. Feature Detection and Description
 def extract_features(img_path, vector_size=32):
@@ -76,17 +77,14 @@ def batch_extractor(imgs_path, pickled_db_path="features.pck"):
     result = {}
 
     for f in files:
-
         print ('Extracting features from img %s' % f)
-
         name = f.split('/')[-1].lower()
-
         #setiap image fiturnya(vektornya) diekstrak
         result[name] = extract_features(f)
 
     # saving all our feature vectors in pickled file
 
-    with open(pickled_db_path, 'w') as fp:
+    with open(pickled_db_path, 'wb') as fp:
         pickle.dump(result, fp)
 
 
@@ -94,15 +92,15 @@ class Matcher():
 
     def __init__(self, pickled_db_path="features.pck"):
 
-        with open(pickled_db_path) as fp:
-
+        with open(pickled_db_path, 'rb') as fp:
+            
             self.data = pickle.load(fp)
 
         self.names = []
 
         self.matrix = []
 
-        for k, v in self.data.iteritems():
+        for k, v in self.data.items():
 
             self.names.append(k)
 
@@ -141,41 +139,46 @@ class Matcher():
     
 def show_img(path):
     # Membaca gambar dari path
-    img = cv2.imread(path, mode="RGB")
+    img = cv2.imread(path, 1)
     plt.imshow(img)
     # Menunjukan gambar ke user
     plt.show()
 
     
 
+
 def run():
 
-    imgs_path = '../img/'
+    images_path = '../img/'
 
-    files = [os.path.join(imgs_path, p) for p in sorted(os.listdir(imgs_path))]
-    # getting 3 random imgs 
+    files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
+
+    # getting 3 random images 
 
     sample = random.sample(files, 1)
+    strsample = ''.join(sample) #ini untuk ngebuat array jd string
 
-    batch_extractor(imgs_path)
+    # batch_extractor(images_path)
 
     ma = Matcher('features.pck')
 
-    
+    print ('Query image ==========================================')
 
-    for s in sample:
+    show_img(strsample)
 
-        print ('Query img ==========================================')
+    names, match = ma.match(strsample, topn=4)
 
-        show_img(s)
+    print ('Result images ========================================')
 
-        names, match = ma.match(s, topn=3)
+    for i in range(3):
 
-        print ('Result imgs ========================================')
+        # we got cosine distance, less cosine distance between vectors
 
-        print ('Match %s' % (1-match[0]))
+        # more they similar, thus we subtruct it from 1 to get match value
 
-        show_img(os.path.join(imgs_path, names[0]))
+        print ('Match %s' % (1-match[i]))
+
+        show_img(os.path.join(images_path, names[i+1]))
 
 
 

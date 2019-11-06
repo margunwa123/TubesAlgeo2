@@ -51,7 +51,7 @@ class Application(tk.Frame):
      
     def openFile(self):
         self.area = tk.Canvas(self, bg = "blue")
-        self.area.palce(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
+        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
         self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
         self.image = Image.open(self.filename)
         self.image = self.image.resize((267,265), Image.ANTIALIAS)

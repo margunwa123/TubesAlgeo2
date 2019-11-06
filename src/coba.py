@@ -3,6 +3,12 @@ from tkinter import *
 from tkinter.ttk import Frame, Button, Label, Style
 from tkinter import filedialog, Text, BOTH, W, N, E, S
 from PIL import Image, ImageTk
+import cv2
+import similarity
+import extract
+import img
+
+
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -28,12 +34,12 @@ class Application(tk.Frame):
         #Konfigurasi Button
         self.Ecluidean = tk.Button(self,text = "Ecluidean")
         self.Ecluidean["bd"] =3
-        self.Ecluidean["command"] = self.say_hi
+        self.Ecluidean["command"] = self.match_euc(self.openFile())
         self.Ecluidean.grid(row=2,column=3)
         self.Cosine = tk.Button(self)
         self.Cosine["text"] = "Cosine"
         self.Cosine["bd"] =3
-        self.Cosine["command"] = self.say_hi
+        self.Cosine["command"] = self.say_hi #match_cosine(self.openFile())
         self.Cosine.place(x=285,y=85)
         self.find = tk.Button(self)
         self.find["text"] = ("Find File")
@@ -48,7 +54,19 @@ class Application(tk.Frame):
         self.quit.grid(column =3, row=5, padx=5)
 
         
-     
+    def match_cosine(self,path):
+        # a = int(input("Berapa banyak image mirip yang ingin dikeluarkan: "))
+        # extract.batch_extractor("..\\img\\")
+        # image = img.get_random_img()
+        paths = extract.closest_match_cosine(path,5)
+        #img.show_img(path,"Query Image")
+        #print(path)
+        img.show_batch_img(paths)
+        cv2.waitKey()
+    def match_euc(self,path):
+        paths = extract.closest_match_euc(path,5)
+        img.show_batch_img(paths)
+        cv2.waitKey()
     def openFile(self):
         self.area = tk.Canvas(self, bg = "blue")
         self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
@@ -57,7 +75,8 @@ class Application(tk.Frame):
         self.image = self.image.resize((267,265), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
-        print(self.filename)
+        return(self.filename)
+
     def databaseFoto(self):
         self.next = tk.Button(self, text="Next", bd =3)
         self.next.grid(column =0, row=5, padx = 15)
@@ -67,6 +86,7 @@ class Application(tk.Frame):
         self.prev.place(x=70,y=268)
     def say_hi(self):
         print("hi there, everyone!")
+
 
 root = tk.Tk()
 root.geometry("350x300+300+300")

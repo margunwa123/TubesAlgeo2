@@ -3,7 +3,9 @@ import extract
 import img
 import cv2
 
-path = extract.closest_match_euc("../img/Aaron Paul0_262.jpg")
+image = "../img/cindy.jpg"
+path = extract.closest_match_euc(image)
+img.show_img(image,"Query Image")
 print(path)
 img.show_batch_img(path)
 cv2.waitKey()

@@ -7,16 +7,18 @@ import cv2
 import similarity
 import extract
 import img
-
+import facerecog as fr
 
 
 class Application(tk.Frame):
+    global pathcos
+    global patheuc
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
         self.grid()
         self.create_widgets()
-        self.databaseFoto()
+        #self.databaseFoto()
         self.place()
        # self.openImage()
     def create_widgets(self):
@@ -32,14 +34,14 @@ class Application(tk.Frame):
         self.area = tk.Canvas(self, bg = "red")
         self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
         #Konfigurasi Button
-        self.Ecluidean = tk.Button(self,text = "Ecluidean")
-        self.Ecluidean["bd"] =3
-        self.Ecluidean["command"] = self.match_euc(self.openFile())
-        self.Ecluidean.grid(row=2,column=3)
+        self.Euclidean = tk.Button(self,text = "Euclidean")
+        self.Euclidean["bd"] =3
+        self.Euclidean["command"] = self.Eucdist
+        self.Euclidean.grid(row=2,column=3)
         self.Cosine = tk.Button(self)
         self.Cosine["text"] = "Cosine"
         self.Cosine["bd"] =3
-        self.Cosine["command"] = self.say_hi #match_cosine(self.openFile())
+        self.Cosine["command"] = self.Cosdist #match_cosine(self.openFile())
         self.Cosine.place(x=285,y=85)
         self.find = tk.Button(self)
         self.find["text"] = ("Find File")
@@ -55,18 +57,67 @@ class Application(tk.Frame):
 
         
     def match_cosine(self,path):
-        # a = int(input("Berapa banyak image mirip yang ingin dikeluarkan: "))
-        # extract.batch_extractor("..\\img\\")
-        # image = img.get_random_img()
         paths = extract.closest_match_cosine(path,5)
-        #img.show_img(path,"Query Image")
-        #print(path)
-        img.show_batch_img(paths)
+        
         cv2.waitKey()
     def match_euc(self,path):
         paths = extract.closest_match_euc(path,5)
-        img.show_batch_img(paths)
+        
         cv2.waitKey()
+
+
+    def Eucdist(self):
+        self.area = tk.Canvas(self, bg = "blue")
+        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
+        self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+        self.image = Image.open(self.filename)
+        self.image = self.image.resize((267,265), Image.ANTIALIAS)
+        self.img = ImageTk.PhotoImage(self.image)
+        self.area.create_image(1,0, image = self.img, anchor=NW)
+        self.match_euc(self.filename)
+
+    def Cosdist(self):
+        self.area = tk.Canvas(self, bg = "blue")
+        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
+        self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+        self.image = Image.open(self.filename)
+        self.image = self.image.resize((267,265), Image.ANTIALIAS)
+        self.img = ImageTk.PhotoImage(self.image)
+        self.area.create_image(1,0, image = self.img, anchor=NW)
+        paths = extract.closest_match_cosine(self.filename,5)
+        files = []
+        for j in paths:
+            files.append(j[0])
+            #berarti semua filename di paths dimasukin ke array files
+        self.next = tk.Button(self, text="Next", bd =3)
+        self.next.grid(column =0, row=5, padx = 15)
+        self.next["command"] =lambda : self.getImgOpen('next')
+        self.prev = tk.Button(self, text = "Prev", bd = 3)
+        self.prev = 0
+        self.prev["command"] =lambda : self.getImgOpen('prev')
+        self.prev.place(x=70,y=268)
+    
+    def getImgOpen(self,seq):
+        print ('Opening %s' % seq)
+        if seq=='ZERO':
+            self.imgIndex = 0
+        elif (seq == 'prev'):
+            if (self.imgIndex == 0):
+                self.imgIndex = len(self.images)-1
+            else:
+                self.imgIndex -= 1
+        elif(seq == 'next'):
+            if(self.imgIndex == len(self.images)-1):
+                self.imgIndex = 0
+            else:
+                self.imgIndex += 1
+        self.masterImg = Image.open(self.images[self.imgIndex]) 
+        self.master.title(self.images[self.imgIndex])
+        self.masterImg.thumbnail((400,400))
+        self.img = ImageTk.PhotoImage(self.masterImg)
+        self.lbl['image'] = self.img
+        return
+    
     def openFile(self):
         self.area = tk.Canvas(self, bg = "blue")
         self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
@@ -75,15 +126,21 @@ class Application(tk.Frame):
         self.image = self.image.resize((267,265), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
-        return(self.filename)
-
+    
+    def openimg(self,path):
+        self.image = Image.open(path)
+        self.image = self.image.resize((267,265), Image.ANTIALIAS)
+        self.img = ImageTk.PhotoImage(self.image)
+        self.area.create_image(1,0, image = self.img, anchor=NW)
+    """
     def databaseFoto(self):
         self.next = tk.Button(self, text="Next", bd =3)
         self.next.grid(column =0, row=5, padx = 15)
+        self.next["command"] = self.openimg()
         self.prev = tk.Button(self, text = "Prev", bd = 3)
-        self.prve = 0
-        print(self.prev)
+        self.prev = 0
         self.prev.place(x=70,y=268)
+    """
     def say_hi(self):
         print("hi there, everyone!")
 

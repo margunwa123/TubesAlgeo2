@@ -11,7 +11,7 @@ def euclidean_distance(x,y):
 def pjg_vektor(x):
     pjg = 0
     for i in range (4096):
-        pjg += x[i] ** 2 
+        pjg += x[i] ** 2
     return math.sqrt(pjg)
 
 def dotProduct(x,y):

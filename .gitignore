@@ -1,1 +1,6 @@
+*.jpg
 *.class
+*.pck
+bin/features.pck
+bin/features.pck
+*.pck

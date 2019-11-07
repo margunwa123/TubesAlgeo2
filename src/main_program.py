@@ -7,7 +7,6 @@ import cv2
 import similarity
 import extract
 import img
-import facerecog as fr
 
 
 class Application(tk.Frame):
@@ -52,12 +51,10 @@ class Application(tk.Frame):
                              command=self.master.destroy)
         self.quit.grid(column =3, row=5, padx=5)
         #Tampilan awal foto
-        """
-        self.image = Image.open("tubesalgeo.jpg")
+        self.image = Image.open("..\\doc\\tubesalgeo.jpg")
         self.image = self.image.resize((267,265), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
-"""
         
     def match_cosine(self,path):
         paths = extract.closest_match_cosine(path,5)
@@ -70,16 +67,6 @@ class Application(tk.Frame):
 
 
     def Eucdist(self):
-        """
-        self.area = tk.Canvas(self, bg = "blue")
-        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
-        self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
-        self.image = Image.open(self.filename)
-        self.image = self.image.resize((267,265), Image.ANTIALIAS)
-        self.img = ImageTk.PhotoImage(self.image)
-        self.area.create_image(1,0, image = self.img, anchor=NW)
-        self.match_euc(self.filename)
-        """
         self.getImgOpen('Ecu')
         self.prev = tk.Button(self, text="Prev", bd =3)
         self.prev.grid(column =0, row=5, padx = 15)
@@ -93,16 +80,6 @@ class Application(tk.Frame):
     
 
     def Cosdist(self):
-        """
-        self.area = tk.Canvas(self, bg = "blue")
-        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
-        self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
-        self.image = Image.open(self.filename)
-        self.image = self.image.resize((267,265), Image.ANTIALIAS)
-        self.img = ImageTk.PhotoImage(self.image)
-        self.area.create_image(1,0, image = self.img, anchor=NW)
-        paths = extract.closest_match_cosine(self.filename,5)
-        """
         self.getImgOpen('Cos')
         self.prev = tk.Button(self, text="Prev", bd =3)
         self.prev.grid(column =0, row=5, padx = 15)
@@ -119,12 +96,12 @@ class Application(tk.Frame):
         if seq=='Ecu':
             self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
             self.paths = extract.closest_match_euc(self.filename,5)
-            print(self.filename)
+            print(self.paths)
             self.imgIndex = -1
         elif seq=='Cos':
             self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
             self.paths = extract.closest_match_cosine(self.filename,5)
-            print(self.filename)
+            print(self.paths)
             self.imgIndex = -1
         elif (seq == 'prev'):
             if (self.imgIndex > 0):
@@ -149,7 +126,7 @@ class Application(tk.Frame):
             self.lbl.grid(row = 5, column = 1)
         if(self.imgIndex != -1):
             print(self.imgIndex)
-            self.image = Image.open("..\\" + self.paths[self.imgIndex][0])
+            self.image = Image.open(self.paths[self.imgIndex][0])
             self.image = self.image.resize((267,265), Image.ANTIALIAS)
             self.img = ImageTk.PhotoImage(self.image)
             self.area.create_image(1,0, image = self.img, anchor=NW)
@@ -159,28 +136,6 @@ class Application(tk.Frame):
             self.img = ImageTk.PhotoImage(self.image)
             self.area.create_image(1,0, image = self.img, anchor=NW)
         
-        
-"""
-    def openFile(self):
-        self.area = tk.Canvas(self, bg = "blue")
-        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
-        self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
-        self.image = Image.open(self.filename)
-        self.image = self.image.resize((267,265), Image.ANTIALIAS)
-        self.img = ImageTk.PhotoImage(self.image)
-        self.area.create_image(1,0, image = self.img, anchor=NW)
-    
-    def databaseFoto(self):
-        self.next = tk.Button(self, text="Next", bd =3)
-        self.next.grid(column =0, row=5, padx = 15)
-        self.next["command"] = self.openimg()
-        self.prev = tk.Button(self, text = "Prev", bd = 3)
-        self.prev = 0
-        self.prev.place(x=70,y=268)
-    def say_hi(self):
-        print("hi there, everyone!")
-"""
-
 
 root = tk.Tk()
 root.geometry("350x300+300+300")

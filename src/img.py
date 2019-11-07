@@ -15,7 +15,6 @@ def show_batch_img(img_arr):
         count += 1
     cv2.waitKey()
 
-
 def get_random_img():
     images_path = "..\\img\\"
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]

@@ -30,6 +30,8 @@ import cv2
      main_program.py - Interface ke user
      extractor.py - Menjalankan  extract.py
  ## Author
+ Kontributor dalam tugas besar ini:
+ 
     Fatkhan Masruri  - 13518053
     Mario Gunawan    - 13518114
     Rafael Sean Putra - 13518119

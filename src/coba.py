@@ -37,16 +37,13 @@ class Application(tk.Frame):
         self.Euclidean = tk.Button(self,text = "Euclidean")
         self.Euclidean["bd"] =3
         self.Euclidean["command"] = self.Eucdist
-        self.Euclidean.grid(row=2,column=3)
+        self.Euclidean.grid(row=1,column=3, pady = 10)
         self.Cosine = tk.Button(self)
         self.Cosine["text"] = "Cosine"
         self.Cosine["bd"] =3
         self.Cosine["command"] = self.Cosdist #match_cosine(self.openFile())
-        self.Cosine.place(x=285,y=85)
+        self.Cosine.grid(row=2,column = 3)
         self.find = tk.Button(self)
-        self.find["text"] = ("Find File")
-        self.find["command"] = self.openFile
-        self.find.grid(row=1, column=3, pady = 10)
         #Membuat Label Bawah
         self.label = tk.Label(self)
         self.label.grid(sticky=W, pady=4, padx=5)
@@ -54,6 +51,11 @@ class Application(tk.Frame):
         self.quit = tk.Button(self, text="QUIT", fg="red",
                              command=self.master.destroy)
         self.quit.grid(column =3, row=5, padx=5)
+        #Tampilan awal foto
+        self.image = Image.open("tubesalgeo.jpg")
+        self.image = self.image.resize((267,265), Image.ANTIALIAS)
+        self.img = ImageTk.PhotoImage(self.image)
+        self.area.create_image(1,0, image = self.img, anchor=NW)
 
         
     def match_cosine(self,path):
@@ -67,6 +69,7 @@ class Application(tk.Frame):
 
 
     def Eucdist(self):
+        """
         self.area = tk.Canvas(self, bg = "blue")
         self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
         self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
@@ -75,8 +78,21 @@ class Application(tk.Frame):
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
         self.match_euc(self.filename)
+        """
+        self.getImgOpen('Ecu')
+        self.prev = tk.Button(self, text="Prev", bd =3)
+        self.prev.grid(column =0, row=5, padx = 15)
+        self.prev["command"] =lambda : self.getImgOpen('prev')
+        self.next = tk.Button(self, text = "Next", bd = 3)
+        self.next["command"] =lambda : self.getImgOpen('next')
+        self.next.place(x=70,y=268)
+        self.matcher = tk.Button(self,text = "Matcher :", bg ="blue", fg ="white", bd = 3)
+        self.matcher["command"] =lambda : self.getImgOpen('next')
+        self.matcher.grid(row = 5, column = 1)
+    
 
     def Cosdist(self):
+        """
         self.area = tk.Canvas(self, bg = "blue")
         self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
         self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
@@ -85,39 +101,58 @@ class Application(tk.Frame):
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
         paths = extract.closest_match_cosine(self.filename,5)
-        files = []
-        for j in paths:
-            files.append(j[0])
-            #berarti semua filename di paths dimasukin ke array files
-        self.next = tk.Button(self, text="Next", bd =3)
-        self.next.grid(column =0, row=5, padx = 15)
-        self.next["command"] =lambda : self.getImgOpen('next')
-        self.prev = tk.Button(self, text = "Prev", bd = 3)
-        self.prev = 0
+        """
+        self.getImgOpen('Cos')
+        self.prev = tk.Button(self, text="Prev", bd =3)
+        self.prev.grid(column =0, row=5, padx = 15)
         self.prev["command"] =lambda : self.getImgOpen('prev')
-        self.prev.place(x=70,y=268)
+        self.next = tk.Button(self, text = "Next", bd = 3)
+        self.next["command"] =lambda : self.getImgOpen('next')
+        self.next.place(x=70,y=268)
+        self.matcher = tk.Button(self,text = "Matcher :", bg ="blue", fg ="white", bd = 3)
+        self.matcher["command"] =lambda : self.getImgOpen('next')
+        self.matcher.grid(row = 5, column = 1)
     
     def getImgOpen(self,seq):
-        print ('Opening %s' % seq)
-        if seq=='ZERO':
-            self.imgIndex = 0
+        #self.paths = extract.closest_match_cosine(self.filename,5)
+        if seq=='Ecu':
+            self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+            print(self.filename)
+            self.imgIndex = -1
+        elif seq=='Cos':
+            self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+            print(self.filename)
+            self.imgIndex = -1
         elif (seq == 'prev'):
-            if (self.imgIndex == 0):
-                self.imgIndex = len(self.images)-1
-            else:
+            if (self.imgIndex > 0):
                 self.imgIndex -= 1
         elif(seq == 'next'):
-            if(self.imgIndex == len(self.images)-1):
-                self.imgIndex = 0
-            else:
+            if(self.imgIndex < 4):
                 self.imgIndex += 1
-        self.masterImg = Image.open(self.images[self.imgIndex]) 
-        self.master.title(self.images[self.imgIndex])
-        self.masterImg.thumbnail((400,400))
-        self.img = ImageTk.PhotoImage(self.masterImg)
-        self.lbl['image'] = self.img
-        return
-    
+        if(self.imgIndex == 0):
+            self.lbl = tk.Label(self,text = "  Match 1  ", bg = "red")
+            self.lbl.grid(row = 5, column = 1)
+        elif(self.imgIndex == 1):
+            self.lbl = tk.Label(self,text = "  Match 2  ", bg = "orange red")
+            self.lbl.grid(row = 5, column = 1)
+        elif(self.imgIndex == 2):
+            self.lbl = tk.Label(self,text = "  Match 3  ", bg = "orange")
+            self.lbl.grid(row = 5, column = 1)
+        elif(self.imgIndex == 3):
+            self.lbl = tk.Label(self,text = "  Match 4  ", bg = "yellow" )
+            self.lbl.grid(row = 5, column = 1)
+        elif(self.imgIndex == 4):
+            self.lbl = tk.Label(self,text = "  Match 5  ", bg = "green2")
+            self.lbl.grid(row = 5, column = 1)
+        self.image = Image.open(self.filename)
+        print(self.imgIndex)
+        #self.image = Image.open(self.paths[self.imgIndex][0])
+        self.image = self.image.resize((267,265), Image.ANTIALIAS)
+        self.img = ImageTk.PhotoImage(self.image)
+        self.area.create_image(1,0, image = self.img, anchor=NW)
+        
+        
+"""
     def openFile(self):
         self.area = tk.Canvas(self, bg = "blue")
         self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
@@ -127,12 +162,6 @@ class Application(tk.Frame):
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
     
-    def openimg(self,path):
-        self.image = Image.open(path)
-        self.image = self.image.resize((267,265), Image.ANTIALIAS)
-        self.img = ImageTk.PhotoImage(self.image)
-        self.area.create_image(1,0, image = self.img, anchor=NW)
-    """
     def databaseFoto(self):
         self.next = tk.Button(self, text="Next", bd =3)
         self.next.grid(column =0, row=5, padx = 15)
@@ -140,9 +169,9 @@ class Application(tk.Frame):
         self.prev = tk.Button(self, text = "Prev", bd = 3)
         self.prev = 0
         self.prev.place(x=70,y=268)
-    """
     def say_hi(self):
         print("hi there, everyone!")
+"""
 
 
 root = tk.Tk()

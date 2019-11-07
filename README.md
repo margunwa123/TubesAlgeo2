@@ -22,15 +22,13 @@ import cv2
 ```
 
 ## Program
-  Program dibagi menjadi 4 file:
+  Program dibagi menjadi 5 file:
   
      exstract.py - Mengubah foto ke vektor
-    
      similarity.py - Matcher foto dan Memasukan hasil kedalam aray of aray
-    
      img.py - Mendaptkan file image
-
-     gui.py - Interface ke user
+     main_program.py - Interface ke user
+     extractor.py - Menjalankan  extract.py
  ## Author
     Fatkhan Masruri  - 13518053
     Mario Gunawan    - 13518114

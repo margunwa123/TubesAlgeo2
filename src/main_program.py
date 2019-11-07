@@ -55,16 +55,6 @@ class Application(tk.Frame):
         self.image = self.image.resize((267,265), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
-        
-    def match_cosine(self,path):
-        paths = extract.closest_match_cosine(path,5)
-        
-        cv2.waitKey()
-    def match_euc(self,path):
-        paths = extract.closest_match_euc(path,5)
-        
-        cv2.waitKey()
-
 
     def Eucdist(self):
         self.getImgOpen('Ecu')
@@ -77,7 +67,6 @@ class Application(tk.Frame):
         self.matcher = tk.Button(self,text = "Matcher :", bg ="blue", fg ="white", bd = 3)
         self.matcher["command"] =lambda : self.getImgOpen('next')
         self.matcher.grid(row = 5, column = 1)
-    
 
     def Cosdist(self):
         self.getImgOpen('Cos')

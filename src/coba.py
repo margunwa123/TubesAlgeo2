@@ -52,11 +52,12 @@ class Application(tk.Frame):
                              command=self.master.destroy)
         self.quit.grid(column =3, row=5, padx=5)
         #Tampilan awal foto
+        """
         self.image = Image.open("tubesalgeo.jpg")
         self.image = self.image.resize((267,265), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.image)
         self.area.create_image(1,0, image = self.img, anchor=NW)
-
+"""
         
     def match_cosine(self,path):
         paths = extract.closest_match_cosine(path,5)
@@ -108,7 +109,7 @@ class Application(tk.Frame):
         self.prev["command"] =lambda : self.getImgOpen('prev')
         self.next = tk.Button(self, text = "Next", bd = 3)
         self.next["command"] =lambda : self.getImgOpen('next')
-        self.next.place(x=70,y=268)
+        self.next.place(x=70,y=270)
         self.matcher = tk.Button(self,text = "Matcher :", bg ="blue", fg ="white", bd = 3)
         self.matcher["command"] =lambda : self.getImgOpen('next')
         self.matcher.grid(row = 5, column = 1)
@@ -117,10 +118,12 @@ class Application(tk.Frame):
         #self.paths = extract.closest_match_cosine(self.filename,5)
         if seq=='Ecu':
             self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+            self.paths = extract.closest_match_euc(self.filename,5)
             print(self.filename)
             self.imgIndex = -1
         elif seq=='Cos':
             self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+            self.paths = extract.closest_match_cosine(self.filename,5)
             print(self.filename)
             self.imgIndex = -1
         elif (seq == 'prev'):
@@ -144,12 +147,17 @@ class Application(tk.Frame):
         elif(self.imgIndex == 4):
             self.lbl = tk.Label(self,text = "  Match 5  ", bg = "green2")
             self.lbl.grid(row = 5, column = 1)
-        self.image = Image.open(self.filename)
-        print(self.imgIndex)
-        #self.image = Image.open(self.paths[self.imgIndex][0])
-        self.image = self.image.resize((267,265), Image.ANTIALIAS)
-        self.img = ImageTk.PhotoImage(self.image)
-        self.area.create_image(1,0, image = self.img, anchor=NW)
+        if(self.imgIndex != -1):
+            print(self.imgIndex)
+            self.image = Image.open("..\\" + self.paths[self.imgIndex][0])
+            self.image = self.image.resize((267,265), Image.ANTIALIAS)
+            self.img = ImageTk.PhotoImage(self.image)
+            self.area.create_image(1,0, image = self.img, anchor=NW)
+        elif(self.imgIndex == -1):
+            self.image = Image.open(self.filename)
+            self.image = self.image.resize((267,265), Image.ANTIALIAS)
+            self.img = ImageTk.PhotoImage(self.image)
+            self.area.create_image(1,0, image = self.img, anchor=NW)
         
         
 """

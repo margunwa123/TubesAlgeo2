@@ -41,3 +41,41 @@ class Matcher(object):
         nearest_img_paths = self.names[nearest_ids].tolist() #buat ngedapetin nama path
         return nearest_img_paths, img_distances[nearest_ids].tolist()
 """
+// file facerecog.py
+import cv2
+import similarity
+import extract
+import img
+def run(img):
+    # a = int(input("Berapa banyak image mirip yang ingin dikeluarkan: "))
+    extract.batch_extractor("..\\pins-database\\")
+    # image = img.get_random_img()
+    # paths = extract.closest_match_cosine(img,5)
+    #paths = extract.closest_match_euc(img,5)
+    #img.show_img(path,"Query Image")
+    #print(path)
+    #img.show_batch_img(paths)
+    #cv2.waitKey()
+run('hehe')
+
+//file mainprogram
+"""
+    def openFile(self):
+        self.area = tk.Canvas(self, bg = "blue")
+        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky = E+W+S+N)
+        self.filename = filedialog.askopenfilename(initialdir= "/", title= "Select Picture", filetype = (("jpeg", "*.jpg"), ("All File", "*,*")))
+        self.image = Image.open(self.filename)
+        self.image = self.image.resize((267,265), Image.ANTIALIAS)
+        self.img = ImageTk.PhotoImage(self.image)
+        self.area.create_image(1,0, image = self.img, anchor=NW)
+    
+    def databaseFoto(self):
+        self.next = tk.Button(self, text="Next", bd =3)
+        self.next.grid(column =0, row=5, padx = 15)
+        self.next["command"] = self.openimg()
+        self.prev = tk.Button(self, text = "Prev", bd = 3)
+        self.prev = 0
+        self.prev.place(x=70,y=268)
+    def say_hi(self):
+        print("hi there, everyone!")
+"""

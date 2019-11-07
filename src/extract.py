@@ -91,7 +91,7 @@ def closest_match_cosine(img, maxel):
         for i in data.items():
             matrix.append(i)
         features = extract_features(img)
-        pnc = []
+        pnc = [] # path and cosine
         for f in matrix:
             A = sim.cos_similarity(features, f[1])
             if(len(pnc) < maxel):
